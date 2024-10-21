@@ -1,4 +1,12 @@
-public class SteelActive(int fyk, double As1, double gap, double pi, double ys1, double ys2, double yf, double yp) : Steel()
+public class SteelActive(
+    int fyk, 
+    double As1,
+    double pi, 
+    double ys1, 
+    double ys2, 
+    double yf, 
+    double yp
+) : Steel()
 {
     public override double Astot => As1;
     public override SteelType Type => SteelType.Active;

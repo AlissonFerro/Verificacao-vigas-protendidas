@@ -7,10 +7,14 @@ public class Form2 : Form
     public SteelActive steelActive;
     public Force force;
     public Bean bean;
-    public TextBox inptHBean;
-    public TextBox inptBBean;
-    public TextBox inptYcBean;
-    public TextBox inptGapBean;
+    private TextBox inptHBean;
+    private TextBox inptBBean;
+    private TextBox inptYcBean;
+    private TextBox inptGapBean;
+    private TextBox txbAsPassivo;
+    private TextBox txbAsPassivo2;
+    private TextBox inptYf;
+
 
     public int? ConcreteSelected =>
         cbClasseConcreto.SelectedItem != null
@@ -18,8 +22,8 @@ public class Form2 : Form
             : null;
 
     public int? SteelSelected =>
-        cbClasseAco.SelectedItem != null
-            ? int.TryParse(cbClasseAco.SelectedItem.ToString(), out int result) ? result : (int?)null
+        cbClasseAcoPassive.SelectedItem != null
+            ? int.TryParse(cbClasseAcoPassive.SelectedItem.ToString(), out int result) ? result : (int?)null
             : null;
     public event EventHandler OnSelectedChange
     {
@@ -32,9 +36,14 @@ public class Form2 : Form
         DropDownStyle = ComboBoxStyle.DropDownList
     };
 
-    ComboBox cbClasseAco = new ComboBox
+    ComboBox cbClasseAcoPassive = new ComboBox
     {
         DropDownStyle = ComboBoxStyle.DropDownList
+    };
+
+    ComboBox cbClasseAcoActive = new ComboBox
+    {
+        DropDownStyle = ComboBoxStyle.DropDownList,
     };
     public Form2()
     {
@@ -51,10 +60,12 @@ public class Form2 : Form
 
         var divClasseConcreto = new FlowLayoutPanel
         {
-            Width = 400,
+            Width = 450,
             Height = 50,
             FlowDirection = FlowDirection.LeftToRight,
+            BackColor = Color.Yellow
         };
+
         main.Controls.Add(divClasseConcreto);
 
         var lbClasseConcreto = new Label
@@ -65,9 +76,23 @@ public class Form2 : Form
 
         var divClasseAco = new FlowLayoutPanel
         {
-            Width = 400,
+            Width = 450,
             Height = 50,
             FlowDirection = FlowDirection.LeftToRight,
+            BackColor = Color.Blue
+        };
+
+        FlowLayoutPanel divClasseAcoActive = new FlowLayoutPanel
+        {
+            Width = 450,
+            Height = 50, 
+            FlowDirection = FlowDirection.LeftToRight,
+            BackColor = Color.Red
+        };
+        Label lblClasseAcoActive = new Label
+        {
+            Text = "Classe do Aço Protendido",
+            Width = 200
         };
 
         var lblClasseAco = new Label
@@ -79,8 +104,8 @@ public class Form2 : Form
         var divAlturaViga = new FlowLayoutPanel
         {
             FlowDirection = FlowDirection.TopDown,
-            Width = 80,
-            BackColor = Color.Red
+            Width = 100,
+            BackColor = Color.Aqua
         };
 
         var divBaseViga = new FlowLayoutPanel
@@ -92,9 +117,10 @@ public class Form2 : Form
 
         var divPropriedadesViga = new FlowLayoutPanel
         {
-            Width = 800,
+            Width = 450,
             Height = 400,
-            FlowDirection = FlowDirection.LeftToRight
+            FlowDirection = FlowDirection.LeftToRight,
+            BackColor = Color.Yellow
         };
 
         var lblBaseViga = new Label
@@ -111,7 +137,7 @@ public class Form2 : Form
 
         this.inptBBean = new TextBox
         {
-            Width = 40
+            Width = 100
         };
 
         this.inptBBean.KeyPress += (s,e) => 
@@ -124,7 +150,7 @@ public class Form2 : Form
 
         this.inptHBean = new TextBox
         {
-            Width = 40
+            Width = 100
         };
 
         
@@ -145,12 +171,12 @@ public class Form2 : Form
             Text = "As2"
         };
 
-        var txbAsPassivo = new TextBox
+        txbAsPassivo = new TextBox
         {
             Width = 100
         };
 
-        var txbAsPassivo2 = new TextBox
+        txbAsPassivo2 = new TextBox
         {
             Width = 100
         };
@@ -174,13 +200,17 @@ public class Form2 : Form
 
         var lblYc = new Label
         {
-            Text = "yc da viga",
-            Margin = new Padding(50, 0, 0, 0)
+            Text = "yc da viga"
         };
 
         inptYcBean = new TextBox
         {
             Width = 100
+        };
+
+        Label txtYfBean = new Label
+        {
+            Text = "yf da Viga",
         };
 
         
@@ -204,18 +234,33 @@ public class Form2 : Form
 
         var divDimensoesViga = new FlowLayoutPanel
         {
-            Width = 800,
-            FlowDirection = FlowDirection.LeftToRight
+            Width = 450,
+            FlowDirection = FlowDirection.LeftToRight,
+            BackColor = Color.Azure
         };
 
         var divButton = new FlowLayoutPanel
         {
-            Width = 400,
+            Width = 450,
         };
 
         Button buttonCalc = new Button
         {
             Text = "Calcular",
+            Width = 446
+        };
+
+        inptYf = new TextBox
+        {
+            Width = 100
+        };
+
+        inptYf.KeyPress += (s, e) => 
+        {
+            if(!char.IsControl(e.KeyChar) && !char.IsDigit(e.KeyChar) && e.KeyChar != '.' && e.KeyChar != ',')
+            {
+                e.Handled = true;
+            }
         };
 
         divButton.Controls.Add(buttonCalc);
@@ -234,22 +279,30 @@ public class Form2 : Form
 
         divPropriedadesViga.Controls.Add(lblAsPassivo2);
         divPropriedadesViga.Controls.Add(txbAsPassivo2);
+        
+        divClasseAcoActive.Controls.Add(lblClasseAcoActive);
+        divClasseAcoActive.Controls.Add(cbClasseAcoActive);
 
         divPropriedadesViga.Controls.Add(divDimensoesViga);
-
 
         divPropriedadesViga.Controls.Add(lblYc);
         divPropriedadesViga.Controls.Add(inptYcBean);
 
+        divPropriedadesViga.Controls.Add(txtYfBean);    
+        divPropriedadesViga.Controls.Add(inptYf);
+
+        divPropriedadesViga.Controls.Add(txtGapBean);
+        divPropriedadesViga.Controls.Add(inptGapBean);
 
         main.Controls.Add(divClasseAco);
+        main.Controls.Add(divClasseAcoActive);
         main.Controls.Add(divPropriedadesViga);
 
         divClasseConcreto.Controls.Add(lbClasseConcreto);
         divClasseConcreto.Controls.Add(cbClasseConcreto);
 
         divClasseAco.Controls.Add(lblClasseAco);
-        divClasseAco.Controls.Add(cbClasseAco);
+        divClasseAco.Controls.Add(cbClasseAcoPassive);
         
         main.Controls.Add(divButton);
 
@@ -261,7 +314,7 @@ public class Form2 : Form
             }
         };
 
-        cbClasseAco.SelectedIndexChanged += (e, s) => {
+        cbClasseAcoPassive.SelectedIndexChanged += (e, s) => {
 
             if(SteelSelected.HasValue)
             {
@@ -283,11 +336,23 @@ public class Form2 : Form
                 .Select(i => 30 + 5 * i)
                 .ToList();
 
-            cbClasseAco.Items.Add(25);
-            cbClasseAco.Items.Add(50);
-            cbClasseAco.Items.Add(60);
+            cbClasseAcoPassive.Items.Add(25);
+            cbClasseAcoPassive.Items.Add(50);
+            cbClasseAcoPassive.Items.Add(60);
 
-            cbClasseAco.SelectedIndex = 1;
+            cbClasseAcoPassive.SelectedIndex = 1;
+
+            cbClasseAcoActive.Items.Add("CP 145 RB");
+            cbClasseAcoActive.Items.Add("CP 150 RB");
+            cbClasseAcoActive.Items.Add("CP 170 RB");
+            cbClasseAcoActive.Items.Add("CP 175 RB");
+            cbClasseAcoActive.Items.Add("CP 190 RB");
+            cbClasseAcoActive.Items.Add("CP 210 RB");
+            cbClasseAcoActive.Items.Add("CP 220 RB");
+            cbClasseAcoActive.Items.Add("CP 230 RB");
+            cbClasseAcoActive.Items.Add("CP 240 RB");
+
+            cbClasseAcoActive.SelectedIndex = 0;
         };
 
 
@@ -302,14 +367,25 @@ public class Form2 : Form
         double GapBean = double.Parse(inptGapBean.Text.ToString());
 
         this.bean = new Bean(BBean, HBean, YcBean, GapBean);
-        
+    }
+
+    private void StartSteelPassive()
+    {
+        int fyk = int.Parse(SteelSelected.ToString());
+        int As1 = int.Parse(txbAsPassivo.Text.ToString());
+        int As2 = int.Parse(txbAsPassivo2.Text.ToString());
+        this.steelPassive = new SteelPassive(fyk, As1, As2);
     }
 
     private void click_buttonCalc(object sender, EventArgs e)
     {
-        // double YcBean = double.Parse(this.);
-        // MessageBox.Show(HBean.ToString());
-        // MessageBox.Show(BBean.ToString());
-        // bean = new Bean()
+        try
+        {
+            StartBean();
+            StartSteelPassive();
+        } catch 
+        {
+            MessageBox.Show("Falha ao processar, verifique os dados inseridos");
+        }
     }
 }
