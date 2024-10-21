@@ -5,6 +5,12 @@ public class Form2 : Form
     public Concrete concrete;
     public SteelPassive steelPassive;
     public SteelActive steelActive;
+    public Force force;
+    public Bean bean;
+    public TextBox inptHBean;
+    public TextBox inptBBean;
+    public TextBox inptYcBean;
+    public TextBox inptGapBean;
 
     public int? ConcreteSelected =>
         cbClasseConcreto.SelectedItem != null
@@ -103,12 +109,12 @@ public class Form2 : Form
             Width = 100
         };
 
-        var inptBaseViga = new TextBox
+        this.inptBBean = new TextBox
         {
             Width = 40
         };
 
-        inptBaseViga.KeyPress += (s,e) => 
+        this.inptBBean.KeyPress += (s,e) => 
         {
             if(!char.IsControl(e.KeyChar) && !char.IsDigit(e.KeyChar))
             {
@@ -116,13 +122,13 @@ public class Form2 : Form
             }
         };
 
-        var inptAlturaViga = new TextBox
+        this.inptHBean = new TextBox
         {
             Width = 40
         };
 
         
-        inptAlturaViga.KeyPress += (s,e) => 
+        this.inptHBean.KeyPress += (s,e) => 
         {
             if(!char.IsControl(e.KeyChar) && !char.IsDigit(e.KeyChar))
             {
@@ -172,18 +178,28 @@ public class Form2 : Form
             Margin = new Padding(50, 0, 0, 0)
         };
 
-        var txbYc = new TextBox
+        inptYcBean = new TextBox
         {
             Width = 100
         };
 
         
-        txbYc.KeyPress += (s,e) => 
+        inptYcBean.KeyPress += (s,e) => 
         {
             if(!char.IsControl(e.KeyChar) && !char.IsDigit(e.KeyChar) && e.KeyChar != '.' && e.KeyChar != ',')
             {
                 e.Handled = true;
             }
+        };
+
+        Label txtGapBean = new Label
+        {
+            Text = "Furo na viga mm²"
+        };
+
+        inptGapBean = new TextBox
+        {
+            Width = 100
         };
 
         var divDimensoesViga = new FlowLayoutPanel
@@ -192,11 +208,26 @@ public class Form2 : Form
             FlowDirection = FlowDirection.LeftToRight
         };
 
+        var divButton = new FlowLayoutPanel
+        {
+            Width = 400,
+        };
+
+        Button buttonCalc = new Button
+        {
+            Text = "Calcular",
+        };
+
+        divButton.Controls.Add(buttonCalc);
+
         divDimensoesViga.Controls.Add(lblBaseViga);
-        divDimensoesViga.Controls.Add(inptBaseViga);
+        divDimensoesViga.Controls.Add(inptBBean);
 
         divDimensoesViga.Controls.Add(lblAlturaViga);
-        divDimensoesViga.Controls.Add(inptAlturaViga);
+        divDimensoesViga.Controls.Add(inptHBean);
+
+        divDimensoesViga.Controls.Add(txtGapBean);
+        divDimensoesViga.Controls.Add(inptGapBean);
 
         divPropriedadesViga.Controls.Add(lblAsPassivo);
         divPropriedadesViga.Controls.Add(txbAsPassivo);
@@ -208,7 +239,7 @@ public class Form2 : Form
 
 
         divPropriedadesViga.Controls.Add(lblYc);
-        divPropriedadesViga.Controls.Add(txbYc);
+        divPropriedadesViga.Controls.Add(inptYcBean);
 
 
         main.Controls.Add(divClasseAco);
@@ -219,6 +250,8 @@ public class Form2 : Form
 
         divClasseAco.Controls.Add(lblClasseAco);
         divClasseAco.Controls.Add(cbClasseAco);
+        
+        main.Controls.Add(divButton);
 
         cbClasseConcreto.SelectedIndexChanged += (e, s) =>
         {
@@ -247,7 +280,7 @@ public class Form2 : Form
         {
             cbClasseConcreto.DataSource =
                 Enumerable.Range(0, 6)
-                .Select(i => 25 + 5 * i)
+                .Select(i => 30 + 5 * i)
                 .ToList();
 
             cbClasseAco.Items.Add(25);
@@ -256,5 +289,27 @@ public class Form2 : Form
 
             cbClasseAco.SelectedIndex = 1;
         };
+
+
+        buttonCalc.Click += (s, e) => click_buttonCalc(s, e);
+    }
+
+    private void StartBean()
+    {
+        int HBean = int.Parse(inptHBean.Text.ToString());
+        int BBean = int.Parse(inptBBean.Text.ToString());
+        int YcBean = int.Parse(inptYcBean.Text.ToString());
+        double GapBean = double.Parse(inptGapBean.Text.ToString());
+
+        this.bean = new Bean(BBean, HBean, YcBean, GapBean);
+        
+    }
+
+    private void click_buttonCalc(object sender, EventArgs e)
+    {
+        // double YcBean = double.Parse(this.);
+        // MessageBox.Show(HBean.ToString());
+        // MessageBox.Show(BBean.ToString());
+        // bean = new Bean()
     }
 }

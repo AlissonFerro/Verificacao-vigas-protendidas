@@ -15,6 +15,8 @@ public class Process(Concrete concrete, SteelActive steelActive, SteelPassive st
   public double I0 =>
     Bean.Ieq + Bean.Ac * Bean.yc * Bean.Yc + As1e * SteelActive.Ys1 * SteelActive.Ys1 + As2e * SteelActive.Ys2 * SteelActive.Ys2 - Bean.Gap * SteelActive.Yf * SteelActive.Yf;
 
+  public double K { get; set; }
+  public double Epr { get; set; }
   public void ProcessMatrix()
   {
     double[,] Mf0 = {
@@ -33,7 +35,8 @@ public class Process(Concrete concrete, SteelActive steelActive, SteelPassive st
     double[,] e0 = MultVectorByMatrix(SubVectores(Rext, fpinit), F0);
     double epr = e0[1,1];
     double k = e0[2,1];
-    
+    K = k;
+    Epr = epr;
   }
 
   public static double[,] MultVectorByMatrix(double[] vector, double[,] matrix)
