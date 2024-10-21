@@ -14,7 +14,7 @@ public class Form2 : Form
     private TextBox txbAsPassivo;
     private TextBox txbAsPassivo2;
     private TextBox inptYf;
-
+    private TextBox inptPi;
 
     public int? ConcreteSelected =>
         cbClasseConcreto.SelectedItem != null
@@ -232,6 +232,10 @@ public class Form2 : Form
             Width = 100
         };
 
+        ToolTip toolTipGap = new ToolTip();
+        toolTipGap.SetToolTip(txtGapBean, "Caso não possua furo coloque 0");
+        toolTipGap.SetToolTip(inptGapBean, "Caso não possua furo coloque 0");
+
         var divDimensoesViga = new FlowLayoutPanel
         {
             Width = 450,
@@ -262,6 +266,17 @@ public class Form2 : Form
                 e.Handled = true;
             }
         };
+        
+        Label lblPi = new Label
+        {
+            Text = "Força de Protensão aplicada"
+        };
+
+        inptPi = new TextBox
+        {
+            Width = 150,
+            PlaceholderText = "em KN"
+        };
 
         divButton.Controls.Add(buttonCalc);
 
@@ -283,6 +298,9 @@ public class Form2 : Form
         divClasseAcoActive.Controls.Add(lblClasseAcoActive);
         divClasseAcoActive.Controls.Add(cbClasseAcoActive);
 
+        divClasseAcoActive.Controls.Add(lblPi);
+        divClasseAcoActive.Controls.Add(inptPi);
+
         divPropriedadesViga.Controls.Add(divDimensoesViga);
 
         divPropriedadesViga.Controls.Add(lblYc);
@@ -295,8 +313,8 @@ public class Form2 : Form
         divPropriedadesViga.Controls.Add(inptGapBean);
 
         main.Controls.Add(divClasseAco);
-        main.Controls.Add(divClasseAcoActive);
         main.Controls.Add(divPropriedadesViga);
+        main.Controls.Add(divClasseAcoActive);
 
         divClasseConcreto.Controls.Add(lbClasseConcreto);
         divClasseConcreto.Controls.Add(cbClasseConcreto);
