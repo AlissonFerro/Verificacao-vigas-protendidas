@@ -1,11 +1,13 @@
+using System.Numerics;
+
 public class Process(Concrete concrete, SteelActive steelActive, SteelPassive steelPassive, Bean bean, Force force)
 {
-  Concrete Concrete => concrete;
-  SteelActive SteelActive => steelActive;
-  SteelPassive SteelPassive => steelPassive;
+  readonly Concrete Concrete = concrete;
+  readonly SteelActive SteelActive = steelActive;
+  readonly SteelPassive SteelPassive = steelPassive;
   Bean Bean => bean;
   Force Force => force;
-  public double AlfAs => SteelPassive.Es / Concrete.Ecs;
+  public readonly double AlfAs = steelPassive.Es / concrete.Ecs;
   public double AlfAp => SteelActive.Es / Concrete.Ecs;
 
   public double As1e => (AlfAs - 1) * SteelPassive.As1;
@@ -33,27 +35,37 @@ public class Process(Concrete concrete, SteelActive steelActive, SteelPassive st
     double epinit = Pi1000 / (SteelActive.Astot * SteelActive.Es);
     double[] fpinit = [Pi1000, -1 * SteelActive.Yp];
     double[,] e0 = MultVectorByMatrix(SubVectores(Rext, fpinit), F0);
-    double epr = e0[1,1];
-    double k = e0[2,1];
+
+    double epr = e0[1, 1];
+    double k = e0[2, 1];
     K = k;
     Epr = epr;
   }
 
   public static double[,] MultVectorByMatrix(double[] vector, double[,] matrix)
   {
-    int length = vector.Length;
-    int lengthMatrix = matrix.GetLength(0);
-    double[,] result = new double[length, lengthMatrix];
+    int vectorLength = vector.Length;
+    int matrixCols = matrix.GetLength(1);
 
-    for(int i = 0; i < length; i++)
+    if (vectorLength != matrix.GetLength(0))
     {
-      for(int j = 0; j < lengthMatrix; j++)
+      throw new ArgumentException("O número de linhas da matriz deve ser igual ao comprimento do vetor.");
+    }
+
+    double[,] result = new double[vectorLength, matrixCols];
+
+    for (int j = 0; j < matrixCols; j++)
+    {
+      for (int i = 0; i < vectorLength; i++)
       {
-        result[i,j] = vector[i] * matrix[i,j];
+        result[i, j] = vector[i] * matrix[i, j]; // Multiplicação do vetor pela coluna da matriz
       }
     }
+
     return result;
   }
+
+
 
   private static double[] SubVectores(double[] vector1, double[] vector2)
   {
@@ -89,5 +101,4 @@ public class Process(Concrete concrete, SteelActive steelActive, SteelPassive st
 
     return result;
   }
-};
-
+}

@@ -14,7 +14,13 @@ public class Form2 : Form
     private TextBox txbAsPassivo;
     private TextBox txbAsPassivo2;
     private TextBox inptYf;
-    private TextBox inptPi;
+    private TextBox inptYp;
+    private TextBox inptPinit;
+    private TextBox inptYs1;
+    private TextBox inptYs2;
+    private TextBox inptAsActive;
+    private TextBox inptNext;
+    private TextBox inptMext;
 
     public int? ConcreteSelected =>
         cbClasseConcreto.SelectedItem != null
@@ -44,6 +50,7 @@ public class Form2 : Form
     ComboBox cbClasseAcoActive = new ComboBox
     {
         DropDownStyle = ComboBoxStyle.DropDownList,
+        Width = 250
     };
     public Form2()
     {
@@ -60,10 +67,9 @@ public class Form2 : Form
 
         var divClasseConcreto = new FlowLayoutPanel
         {
-            Width = 450,
+            Width = 500,
             Height = 50,
-            FlowDirection = FlowDirection.LeftToRight,
-            BackColor = Color.Yellow
+            FlowDirection = FlowDirection.LeftToRight
         };
 
         main.Controls.Add(divClasseConcreto);
@@ -76,18 +82,16 @@ public class Form2 : Form
 
         var divClasseAco = new FlowLayoutPanel
         {
-            Width = 450,
+            Width = 500,
             Height = 50,
-            FlowDirection = FlowDirection.LeftToRight,
-            BackColor = Color.Blue
+            FlowDirection = FlowDirection.LeftToRight
         };
 
         FlowLayoutPanel divClasseAcoActive = new FlowLayoutPanel
         {
-            Width = 450,
-            Height = 50, 
-            FlowDirection = FlowDirection.LeftToRight,
-            BackColor = Color.Red
+            Width = 500, 
+            Height = 200,
+            FlowDirection = FlowDirection.LeftToRight
         };
         Label lblClasseAcoActive = new Label
         {
@@ -104,40 +108,44 @@ public class Form2 : Form
         var divAlturaViga = new FlowLayoutPanel
         {
             FlowDirection = FlowDirection.TopDown,
-            Width = 100,
-            BackColor = Color.Aqua
+            Width = 100
         };
 
         var divBaseViga = new FlowLayoutPanel
         {
             FlowDirection = FlowDirection.TopDown,
-            Width = 100,
-            BackColor = Color.Yellow
+            Width = 100
         };
 
         var divPropriedadesViga = new FlowLayoutPanel
         {
-            Width = 450,
-            Height = 400,
-            FlowDirection = FlowDirection.LeftToRight,
-            BackColor = Color.Yellow
+            Width = 500,
+            Height = 200,
+            FlowDirection = FlowDirection.LeftToRight
+        };
+
+        FlowLayoutPanel divForcas = new FlowLayoutPanel
+        {
+            Width = 500,
+            FlowDirection = FlowDirection.LeftToRight
         };
 
         var lblBaseViga = new Label
         {
-            Text = "B viga em mm",
+            Text = "B viga",
             Width = 100
         };
 
         var lblAlturaViga = new Label
         {
-            Text = "h viga em mm",
+            Text = "h viga",
             Width = 100
         };
 
         this.inptBBean = new TextBox
         {
-            Width = 100
+            Width = 100,
+            PlaceholderText = "Em mm"
         };
 
         this.inptBBean.KeyPress += (s,e) => 
@@ -150,7 +158,8 @@ public class Form2 : Form
 
         this.inptHBean = new TextBox
         {
-            Width = 100
+            Width = 100,
+            PlaceholderText = "Em mm"
         };
 
         
@@ -173,12 +182,14 @@ public class Form2 : Form
 
         txbAsPassivo = new TextBox
         {
-            Width = 100
+            Width = 100,
+            PlaceholderText = "Em mm²"
         };
 
         txbAsPassivo2 = new TextBox
         {
-            Width = 100
+            Width = 100,
+            PlaceholderText = "Em mm²"
         };
 
         
@@ -205,7 +216,8 @@ public class Form2 : Form
 
         inptYcBean = new TextBox
         {
-            Width = 100
+            Width = 100,
+            PlaceholderText = "Em mm"
         };
 
         Label txtYfBean = new Label
@@ -238,20 +250,19 @@ public class Form2 : Form
 
         var divDimensoesViga = new FlowLayoutPanel
         {
-            Width = 450,
-            FlowDirection = FlowDirection.LeftToRight,
-            BackColor = Color.Azure
+            Width = 500,
+            FlowDirection = FlowDirection.LeftToRight
         };
 
         var divButton = new FlowLayoutPanel
         {
-            Width = 450,
+            Width = 500,
         };
 
         Button buttonCalc = new Button
         {
             Text = "Calcular",
-            Width = 446
+            Width = 496
         };
 
         inptYf = new TextBox
@@ -267,16 +278,95 @@ public class Form2 : Form
             }
         };
         
-        Label lblPi = new Label
+        Label lblAsActive = new Label
         {
-            Text = "Força de Protensão aplicada"
+            Text = "Área de aço de protensão",
+            Width = 200
         };
 
-        inptPi = new TextBox
+        inptAsActive = new TextBox
         {
-            Width = 150,
+            Width = 100,
+            PlaceholderText = "Em mm²",
+        };
+        
+        Label lblPi = new Label
+        {
+            Text = "Força de Protensão inicial",
+            Width = 200
+        };
+
+        inptPinit = new TextBox
+        {
+            Width = 100,
             PlaceholderText = "em KN"
         };
+
+        Label lblYp = new Label
+        {
+            Text = "Altura do Yp",
+            Width = 200
+        };
+
+        inptYp = new TextBox
+        {
+            Width = 100,
+            PlaceholderText = "Em mm"
+        };
+
+        Label lblYs1 = new Label
+        {
+            Text = "Altura ys1",
+            Width = 200
+        };
+
+        inptYs1 = new TextBox
+        {
+            Width = 100,
+            PlaceholderText = "Em mm"
+        };
+
+        Label lblYs2 = new Label
+        {
+            Text = "Altura ys2",
+            Width = 200
+        };
+
+        inptYs2 = new TextBox
+        {
+            Width = 100,
+            PlaceholderText = "Em mm"
+        };
+
+        Label lblNext = new Label
+        {
+            Text = "Força Normal",
+            Width = 200
+        };
+
+        inptNext = new TextBox
+        {
+            Width = 100,
+            PlaceholderText = "Em KN"
+        };
+
+        Label lblMext = new Label
+        {
+            Text = "Momento Fletor",
+            Width = 200
+        };
+
+        inptMext = new TextBox
+        {
+            Width = 100,
+            PlaceholderText = "Em KN*cm"
+        };
+
+        divForcas.Controls.Add(lblNext);
+        divForcas.Controls.Add(inptNext);
+
+        divForcas.Controls.Add(lblMext);
+        divForcas.Controls.Add(inptMext);
 
         divButton.Controls.Add(buttonCalc);
 
@@ -297,9 +387,21 @@ public class Form2 : Form
         
         divClasseAcoActive.Controls.Add(lblClasseAcoActive);
         divClasseAcoActive.Controls.Add(cbClasseAcoActive);
+        
+        divClasseAcoActive.Controls.Add(lblAsActive);
+        divClasseAcoActive.Controls.Add(inptAsActive);      
 
         divClasseAcoActive.Controls.Add(lblPi);
-        divClasseAcoActive.Controls.Add(inptPi);
+        divClasseAcoActive.Controls.Add(inptPinit);
+
+        divClasseAcoActive.Controls.Add(lblYp);
+        divClasseAcoActive.Controls.Add(inptYp);
+
+        divClasseAcoActive.Controls.Add(lblYs1);
+        divClasseAcoActive.Controls.Add(inptYs1);
+
+        divClasseAcoActive.Controls.Add(lblYs2);
+        divClasseAcoActive.Controls.Add(inptYs2);
 
         divPropriedadesViga.Controls.Add(divDimensoesViga);
 
@@ -312,16 +414,16 @@ public class Form2 : Form
         divPropriedadesViga.Controls.Add(txtGapBean);
         divPropriedadesViga.Controls.Add(inptGapBean);
 
-        main.Controls.Add(divClasseAco);
-        main.Controls.Add(divPropriedadesViga);
-        main.Controls.Add(divClasseAcoActive);
-
         divClasseConcreto.Controls.Add(lbClasseConcreto);
         divClasseConcreto.Controls.Add(cbClasseConcreto);
 
         divClasseAco.Controls.Add(lblClasseAco);
         divClasseAco.Controls.Add(cbClasseAcoPassive);
         
+        main.Controls.Add(divClasseAco);
+        main.Controls.Add(divPropriedadesViga);
+        main.Controls.Add(divClasseAcoActive);
+        main.Controls.Add(divForcas);
         main.Controls.Add(divButton);
 
         cbClasseConcreto.SelectedIndexChanged += (e, s) =>
@@ -350,7 +452,7 @@ public class Form2 : Form
         Load += (s, e) =>
         {
             cbClasseConcreto.DataSource =
-                Enumerable.Range(0, 6)
+                Enumerable.Range(0, 5)
                 .Select(i => 30 + 5 * i)
                 .ToList();
 
@@ -389,21 +491,56 @@ public class Form2 : Form
 
     private void StartSteelPassive()
     {
-        int fyk = int.Parse(SteelSelected.ToString());
+        int fyk = int.Parse(SteelSelected.ToString()!);
         int As1 = int.Parse(txbAsPassivo.Text.ToString());
         int As2 = int.Parse(txbAsPassivo2.Text.ToString());
         this.steelPassive = new SteelPassive(fyk, As1, As2);
     }
 
+    private void StartConcrete()
+    {
+        int fck = int.Parse(cbClasseConcreto.Text.ToString());
+        this.concrete = new Concrete(fck);
+    }
+
+    private void StartSteelActive()
+    {
+        string fykString = cbClasseAcoActive.Text.ToString();
+        string[] fykSplit = fykString.Split(" ");
+        int fyk = int.Parse(fykSplit[1]);
+        int As = int.Parse(inptAsActive.Text.ToString());
+        int Yf = int.Parse(inptYf.Text.ToString());
+        int ys1 = int.Parse(inptYs1.Text.ToString());
+        int ys2 = int.Parse(inptYs2.Text.ToString());
+        int yp = int.Parse(inptYp.Text.ToString()); 
+        int Pi = int.Parse(inptPinit.Text.ToString());
+        this.steelActive = new SteelActive(fyk, As, Pi, ys1, ys2, Yf, yp);
+    }
+    private void StartForces()
+    {
+        int N = int.Parse(inptNext.Text.ToString());
+        int M = int.Parse(inptMext.Text.ToString());
+        this.force = new Force(N, M);
+    }
     private void click_buttonCalc(object sender, EventArgs e)
     {
         try
         {
+            StartConcrete();
             StartBean();
             StartSteelPassive();
-        } catch 
+            StartSteelActive();
+            StartForces();
+        } catch(Exception err) 
         {
-            MessageBox.Show("Falha ao processar, verifique os dados inseridos");
+            // MessageBox.Show("Falha ao processar, verifique os dados inseridos");
+            MessageBox.Show(err.Message.ToString());
+        }
+        try{
+            Process process = new Process(concrete, steelActive, steelPassive, bean, force);
+            process.ProcessMatrix();
+        } catch(Exception err){
+            MessageBox.Show(err.Message.ToString());
         }
     }
 }
