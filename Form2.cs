@@ -21,6 +21,8 @@ public class Form2 : Form
     private TextBox inptAsActive;
     private TextBox inptNext;
     private TextBox inptMext;
+    private PictureBox pb;
+    private FlowLayoutPanel main;
 
     public int? ConcreteSelected =>
         cbClasseConcreto.SelectedItem != null
@@ -57,12 +59,15 @@ public class Form2 : Form
         WindowState = FormWindowState.Maximized;
         FormBorderStyle = FormBorderStyle.SizableToolWindow;
 
-        var main = new FlowLayoutPanel
+        main = new FlowLayoutPanel
         {
             FlowDirection = FlowDirection.TopDown,
             Dock = DockStyle.Fill,
             Padding = new Padding(40),
+            Width = 1024,
+            Height = 768
         };
+
         Controls.Add(main);
 
         var divClasseConcreto = new FlowLayoutPanel
@@ -89,7 +94,7 @@ public class Form2 : Form
 
         FlowLayoutPanel divClasseAcoActive = new FlowLayoutPanel
         {
-            Width = 500, 
+            Width = 500,
             Height = 200,
             FlowDirection = FlowDirection.LeftToRight
         };
@@ -121,7 +126,8 @@ public class Form2 : Form
         {
             Width = 500,
             Height = 200,
-            FlowDirection = FlowDirection.LeftToRight
+            FlowDirection = FlowDirection.LeftToRight,
+            BackColor = Color.Yellow
         };
 
         FlowLayoutPanel divForcas = new FlowLayoutPanel
@@ -148,9 +154,9 @@ public class Form2 : Form
             PlaceholderText = "Em mm"
         };
 
-        this.inptBBean.KeyPress += (s,e) => 
+        this.inptBBean.KeyPress += (s, e) =>
         {
-            if(!char.IsControl(e.KeyChar) && !char.IsDigit(e.KeyChar))
+            if (!char.IsControl(e.KeyChar) && !char.IsDigit(e.KeyChar))
             {
                 e.Handled = true;
             }
@@ -162,10 +168,10 @@ public class Form2 : Form
             PlaceholderText = "Em mm"
         };
 
-        
-        this.inptHBean.KeyPress += (s,e) => 
+
+        this.inptHBean.KeyPress += (s, e) =>
         {
-            if(!char.IsControl(e.KeyChar) && !char.IsDigit(e.KeyChar))
+            if (!char.IsControl(e.KeyChar) && !char.IsDigit(e.KeyChar))
             {
                 e.Handled = true;
             }
@@ -192,18 +198,18 @@ public class Form2 : Form
             PlaceholderText = "Em mm²"
         };
 
-        
-        txbAsPassivo.KeyPress += (s,e) => 
+
+        txbAsPassivo.KeyPress += (s, e) =>
         {
-            if(!char.IsControl(e.KeyChar) && !char.IsDigit(e.KeyChar) && e.KeyChar != '.' && e.KeyChar != ',')
+            if (!char.IsControl(e.KeyChar) && !char.IsDigit(e.KeyChar) && e.KeyChar != '.' && e.KeyChar != ',')
             {
                 e.Handled = true;
             }
         };
 
-        txbAsPassivo2.KeyPress += (s,e) => 
+        txbAsPassivo2.KeyPress += (s, e) =>
         {
-            if(!char.IsControl(e.KeyChar) && !char.IsDigit(e.KeyChar) && e.KeyChar != '.' && e.KeyChar != ',')
+            if (!char.IsControl(e.KeyChar) && !char.IsDigit(e.KeyChar) && e.KeyChar != '.' && e.KeyChar != ',')
             {
                 e.Handled = true;
             }
@@ -225,10 +231,10 @@ public class Form2 : Form
             Text = "yf da Viga",
         };
 
-        
-        inptYcBean.KeyPress += (s,e) => 
+
+        inptYcBean.KeyPress += (s, e) =>
         {
-            if(!char.IsControl(e.KeyChar) && !char.IsDigit(e.KeyChar) && e.KeyChar != '.' && e.KeyChar != ',')
+            if (!char.IsControl(e.KeyChar) && !char.IsDigit(e.KeyChar) && e.KeyChar != '.' && e.KeyChar != ',')
             {
                 e.Handled = true;
             }
@@ -270,14 +276,14 @@ public class Form2 : Form
             Width = 100
         };
 
-        inptYf.KeyPress += (s, e) => 
+        inptYf.KeyPress += (s, e) =>
         {
-            if(!char.IsControl(e.KeyChar) && !char.IsDigit(e.KeyChar) && e.KeyChar != '.' && e.KeyChar != ',')
+            if (!char.IsControl(e.KeyChar) && !char.IsDigit(e.KeyChar) && e.KeyChar != '.' && e.KeyChar != ',')
             {
                 e.Handled = true;
             }
         };
-        
+
         Label lblAsActive = new Label
         {
             Text = "Área de aço de protensão",
@@ -289,7 +295,7 @@ public class Form2 : Form
             Width = 100,
             PlaceholderText = "Em mm²",
         };
-        
+
         Label lblPi = new Label
         {
             Text = "Força de Protensão inicial",
@@ -362,6 +368,12 @@ public class Form2 : Form
             PlaceholderText = "Em KN*cm"
         };
 
+        pb = new PictureBox
+        {
+            Dock = DockStyle.Fill,
+            Height = 200
+        };
+
         divForcas.Controls.Add(lblNext);
         divForcas.Controls.Add(inptNext);
 
@@ -370,11 +382,14 @@ public class Form2 : Form
 
         divButton.Controls.Add(buttonCalc);
 
+
         divDimensoesViga.Controls.Add(lblBaseViga);
         divDimensoesViga.Controls.Add(inptBBean);
 
         divDimensoesViga.Controls.Add(lblAlturaViga);
         divDimensoesViga.Controls.Add(inptHBean);
+
+        divDimensoesViga.Controls.Add(pb);
 
         divDimensoesViga.Controls.Add(txtGapBean);
         divDimensoesViga.Controls.Add(inptGapBean);
@@ -384,12 +399,12 @@ public class Form2 : Form
 
         divPropriedadesViga.Controls.Add(lblAsPassivo2);
         divPropriedadesViga.Controls.Add(txbAsPassivo2);
-        
+
         divClasseAcoActive.Controls.Add(lblClasseAcoActive);
         divClasseAcoActive.Controls.Add(cbClasseAcoActive);
-        
+
         divClasseAcoActive.Controls.Add(lblAsActive);
-        divClasseAcoActive.Controls.Add(inptAsActive);      
+        divClasseAcoActive.Controls.Add(inptAsActive);
 
         divClasseAcoActive.Controls.Add(lblPi);
         divClasseAcoActive.Controls.Add(inptPinit);
@@ -408,7 +423,7 @@ public class Form2 : Form
         divPropriedadesViga.Controls.Add(lblYc);
         divPropriedadesViga.Controls.Add(inptYcBean);
 
-        divPropriedadesViga.Controls.Add(txtYfBean);    
+        divPropriedadesViga.Controls.Add(txtYfBean);
         divPropriedadesViga.Controls.Add(inptYf);
 
         divPropriedadesViga.Controls.Add(txtGapBean);
@@ -419,7 +434,7 @@ public class Form2 : Form
 
         divClasseAco.Controls.Add(lblClasseAco);
         divClasseAco.Controls.Add(cbClasseAcoPassive);
-        
+
         main.Controls.Add(divClasseAco);
         main.Controls.Add(divPropriedadesViga);
         main.Controls.Add(divClasseAcoActive);
@@ -434,20 +449,21 @@ public class Form2 : Form
             }
         };
 
-        cbClasseAcoPassive.SelectedIndexChanged += (e, s) => {
+        cbClasseAcoPassive.SelectedIndexChanged += (e, s) =>
+        {
 
-            if(SteelSelected.HasValue)
+            if (SteelSelected.HasValue)
             {
                 this.steelPassive = new SteelPassive(
                     (int)SteelSelected,
                             (double)(txbAsPassivo.Text != null
-                        ? double.TryParse(txbAsPassivo.Text.ToString(), out double result) ? result : (double?) 0.00
+                        ? double.TryParse(txbAsPassivo.Text.ToString(), out double result) ? result : (double?)0.00
                         : 0.00),
                         (double)(txbAsPassivo2.Text != null
-                        ? double.TryParse(txbAsPassivo2.Text.ToString(), out double res)? res : (double?) 0.00
-                        : 0.00)); 
+                        ? double.TryParse(txbAsPassivo2.Text.ToString(), out double res) ? res : (double?)0.00
+                        : 0.00));
             }
-         };
+        };
 
         Load += (s, e) =>
         {
@@ -479,6 +495,26 @@ public class Form2 : Form
         buttonCalc.Click += (s, e) => click_buttonCalc(s, e);
     }
 
+    private void RenderGraph(PictureBox pb){
+        Load += delegate
+        {
+            Width = pb.Width;
+            Height = pb.Height;
+
+            Bitmap bmp = new(Width, Height);
+            using (Graphics g = Graphics.FromImage(bmp))
+            {
+                using (Pen pen = new Pen(Color.Black, 2))
+                {
+                    g.Clear(Color.Red);
+                    g.DrawRectangle(pen, new Rectangle(0, 0, 50,100));
+                }
+            }
+            pb.Image = bmp;
+        };
+        main.Controls.Add(pb);
+    }
+
     private void StartBean()
     {
         int HBean = int.Parse(inptHBean.Text.ToString());
@@ -491,7 +527,7 @@ public class Form2 : Form
 
     private void StartSteelPassive()
     {
-        int fyk = int.Parse(SteelSelected.ToString()!);
+        int fyk = int.Parse(SteelSelected.ToString()!) * 10;
         int As1 = int.Parse(txbAsPassivo.Text.ToString());
         int As2 = int.Parse(txbAsPassivo2.Text.ToString());
         this.steelPassive = new SteelPassive(fyk, As1, As2);
@@ -507,12 +543,12 @@ public class Form2 : Form
     {
         string fykString = cbClasseAcoActive.Text.ToString();
         string[] fykSplit = fykString.Split(" ");
-        int fyk = int.Parse(fykSplit[1]);
+        int fyk = int.Parse(fykSplit[1]) * 10;
         int As = int.Parse(inptAsActive.Text.ToString());
         int Yf = int.Parse(inptYf.Text.ToString());
         int ys1 = int.Parse(inptYs1.Text.ToString());
         int ys2 = int.Parse(inptYs2.Text.ToString());
-        int yp = int.Parse(inptYp.Text.ToString()); 
+        int yp = int.Parse(inptYp.Text.ToString());
         int Pi = int.Parse(inptPinit.Text.ToString());
         this.steelActive = new SteelActive(fyk, As, Pi, ys1, ys2, Yf, yp);
     }
@@ -531,16 +567,23 @@ public class Form2 : Form
             StartSteelPassive();
             StartSteelActive();
             StartForces();
-        } catch(Exception err) 
-        {
-            // MessageBox.Show("Falha ao processar, verifique os dados inseridos");
-            MessageBox.Show(err.Message.ToString());
         }
-        try{
+        catch (Exception err)
+        {
+            MessageBox.Show("Falha ao iniciar, verifique os dados inseridos");
+            // MessageBox.Show(err.Message.ToString());
+            return;
+        }
+        try
+        {
             Process process = new Process(concrete, steelActive, steelPassive, bean, force);
             process.ProcessMatrix();
-        } catch(Exception err){
+            RenderGraph(pb);
+        }
+        catch (Exception err)
+        {
             MessageBox.Show(err.Message.ToString());
+            return;
         }
     }
 }

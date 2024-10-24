@@ -36,8 +36,9 @@ public class Process(Concrete concrete, SteelActive steelActive, SteelPassive st
     double[] fpinit = [Pi1000, -1 * SteelActive.Yp];
     double[,] e0 = MultVectorByMatrix(SubVectores(Rext, fpinit), F0);
 
-    double epr = e0[1, 1];
-    double k = e0[2, 1];
+    double epr = e0[0, 0];
+    double k = e0[1, 0];
+
     K = k;
     Epr = epr;
   }
@@ -48,9 +49,7 @@ public class Process(Concrete concrete, SteelActive steelActive, SteelPassive st
     int matrixCols = matrix.GetLength(1);
 
     if (vectorLength != matrix.GetLength(0))
-    {
-      throw new ArgumentException("O número de linhas da matriz deve ser igual ao comprimento do vetor.");
-    }
+      throw new ArgumentException("O número de linhas da matriz deve ser igual ao comprimento do vetor.");    
 
     double[,] result = new double[vectorLength, matrixCols];
 
