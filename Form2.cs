@@ -7,6 +7,7 @@ public class Form2 : Form
     public SteelActive steelActive;
     public Force force;
     public Bean bean;
+    public Process process;
     private TextBox inptHBean;
     private TextBox inptBBean;
     private TextBox inptYcBean;
@@ -63,9 +64,7 @@ public class Form2 : Form
         {
             FlowDirection = FlowDirection.TopDown,
             Dock = DockStyle.Fill,
-            Padding = new Padding(40),
-            Width = 1024,
-            Height = 768
+            Padding = new Padding(40)
         };
 
         Controls.Add(main);
@@ -98,7 +97,7 @@ public class Form2 : Form
             Height = 200,
             FlowDirection = FlowDirection.LeftToRight
         };
-        Label lblClasseAcoActive = new Label
+        Label lblClasseAcoActive = new()
         {
             Text = "Classe do Aço Protendido",
             Width = 200
@@ -126,8 +125,7 @@ public class Form2 : Form
         {
             Width = 500,
             Height = 200,
-            FlowDirection = FlowDirection.LeftToRight,
-            BackColor = Color.Yellow
+            FlowDirection = FlowDirection.LeftToRight
         };
 
         FlowLayoutPanel divForcas = new FlowLayoutPanel
@@ -491,11 +489,11 @@ public class Form2 : Form
             cbClasseAcoActive.SelectedIndex = 0;
         };
 
-
         buttonCalc.Click += (s, e) => click_buttonCalc(s, e);
     }
 
-    private void RenderGraph(PictureBox pb){
+    private void RenderGraph(PictureBox pb)
+    {
         Load += delegate
         {
             Width = pb.Width;
@@ -504,15 +502,37 @@ public class Form2 : Form
             Bitmap bmp = new(Width, Height);
             using (Graphics g = Graphics.FromImage(bmp))
             {
-                using (Pen pen = new Pen(Color.Black, 2))
-                {
-                    g.Clear(Color.Red);
-                    g.DrawRectangle(pen, new Rectangle(0, 0, 50,100));
-                }
+                using Pen pen = new Pen(Color.Black, 2);
+                g.Clear(Color.Red);
+                g.DrawRectangle(pen, new Rectangle(0, 0, 50, 100));
             }
             pb.Image = bmp;
         };
         main.Controls.Add(pb);
+    }
+
+    private void ShowResults()
+    {
+        FlowLayoutPanel divResults = new FlowLayoutPanel
+        {
+            FlowDirection = FlowDirection.LeftToRight,
+            Width = 500,
+        };
+
+        Label lblK = new Label
+        {
+            Text = "K = " + process.K.ToString("E2"),
+            Width = 100
+        };
+
+        Label lblEpr = new Label
+        {
+            Text = "Epr = " + process.Epr.ToString("E2"),
+            Width = 100
+        };
+        divResults.Controls.Add(lblK);
+        divResults.Controls.Add(lblEpr);
+        main.Controls.Add(divResults);
     }
 
     private void StartBean()
@@ -576,9 +596,10 @@ public class Form2 : Form
         }
         try
         {
-            Process process = new Process(concrete, steelActive, steelPassive, bean, force);
+            process = new Process(concrete, steelActive, steelPassive, bean, force);
             process.ProcessMatrix();
             RenderGraph(pb);
+            ShowResults();
         }
         catch (Exception err)
         {
