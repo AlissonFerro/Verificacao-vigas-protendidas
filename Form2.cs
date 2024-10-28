@@ -24,6 +24,7 @@ public class Form2 : Form
     private TextBox inptMext;
     private PictureBox pb;
     private FlowLayoutPanel main;
+    private FlowLayoutPanel divResults;
 
     public int? ConcreteSelected =>
         cbClasseConcreto.SelectedItem != null
@@ -240,15 +241,17 @@ public class Form2 : Form
 
         Label txtGapBean = new Label
         {
-            Text = "Furo na viga mm²"
+            Text = "Furo na viga",
+            Width = 100,
         };
 
         inptGapBean = new TextBox
         {
-            Width = 100
+            Width = 100,
+            PlaceholderText = "Em mm²"
         };
 
-        ToolTip toolTipGap = new ToolTip();
+        ToolTip toolTipGap = new();
         toolTipGap.SetToolTip(txtGapBean, "Caso não possua furo coloque 0");
         toolTipGap.SetToolTip(inptGapBean, "Caso não possua furo coloque 0");
 
@@ -271,7 +274,8 @@ public class Form2 : Form
 
         inptYf = new TextBox
         {
-            Width = 100
+            Width = 100,
+            PlaceholderText = "Em mm"
         };
 
         inptYf.KeyPress += (s, e) =>
@@ -513,7 +517,7 @@ public class Form2 : Form
 
     private void ShowResults()
     {
-        FlowLayoutPanel divResults = new FlowLayoutPanel
+        this.divResults = new FlowLayoutPanel
         {
             FlowDirection = FlowDirection.LeftToRight,
             Width = 500,
@@ -580,6 +584,10 @@ public class Form2 : Form
     }
     private void click_buttonCalc(object sender, EventArgs e)
     {
+        if (divResults != null)
+        {
+            main.Controls.Remove(divResults);
+        }
         try
         {
             StartConcrete();
