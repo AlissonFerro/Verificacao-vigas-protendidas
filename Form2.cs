@@ -25,6 +25,7 @@ public class Form2 : Form
     private PictureBox pb;
     private FlowLayoutPanel main;
     private FlowLayoutPanel divResults;
+    private Label title;
 
     public int? ConcreteSelected =>
         cbClasseConcreto.SelectedItem != null
@@ -41,17 +42,17 @@ public class Form2 : Form
         remove => cbClasseConcreto.SelectedIndexChanged -= value;
     }
 
-    ComboBox cbClasseConcreto = new ComboBox
+    ComboBox cbClasseConcreto = new()
     {
         DropDownStyle = ComboBoxStyle.DropDownList
     };
 
-    ComboBox cbClasseAcoPassive = new ComboBox
+    ComboBox cbClasseAcoPassive = new()
     {
         DropDownStyle = ComboBoxStyle.DropDownList
     };
 
-    ComboBox cbClasseAcoActive = new ComboBox
+    ComboBox cbClasseAcoActive = new()
     {
         DropDownStyle = ComboBoxStyle.DropDownList,
         Width = 250
@@ -92,7 +93,7 @@ public class Form2 : Form
             FlowDirection = FlowDirection.LeftToRight
         };
 
-        FlowLayoutPanel divClasseAcoActive = new FlowLayoutPanel
+        FlowLayoutPanel divClasseAcoActive = new()
         {
             Width = 500,
             Height = 200,
@@ -129,7 +130,7 @@ public class Form2 : Form
             FlowDirection = FlowDirection.LeftToRight
         };
 
-        FlowLayoutPanel divForcas = new FlowLayoutPanel
+        FlowLayoutPanel divForcas = new()
         {
             Width = 500,
             FlowDirection = FlowDirection.LeftToRight
@@ -225,7 +226,7 @@ public class Form2 : Form
             PlaceholderText = "Em mm"
         };
 
-        Label txtYfBean = new Label
+        Label txtYfBean = new()
         {
             Text = "yf da Viga",
         };
@@ -239,7 +240,7 @@ public class Form2 : Form
             }
         };
 
-        Label txtGapBean = new Label
+        Label txtGapBean = new()
         {
             Text = "Furo na viga",
             Width = 100,
@@ -266,7 +267,7 @@ public class Form2 : Form
             Width = 500,
         };
 
-        Button buttonCalc = new Button
+        Button buttonCalc = new()
         {
             Text = "Calcular",
             Width = 496
@@ -286,7 +287,7 @@ public class Form2 : Form
             }
         };
 
-        Label lblAsActive = new Label
+        Label lblAsActive = new()
         {
             Text = "Área de aço de protensão",
             Width = 200
@@ -298,7 +299,7 @@ public class Form2 : Form
             PlaceholderText = "Em mm²",
         };
 
-        Label lblPi = new Label
+        Label lblPi = new()
         {
             Text = "Força de Protensão inicial",
             Width = 200
@@ -310,7 +311,7 @@ public class Form2 : Form
             PlaceholderText = "em KN"
         };
 
-        Label lblYp = new Label
+        Label lblYp = new()
         {
             Text = "Altura do Yp",
             Width = 200
@@ -322,7 +323,7 @@ public class Form2 : Form
             PlaceholderText = "Em mm"
         };
 
-        Label lblYs1 = new Label
+        Label lblYs1 = new()
         {
             Text = "Altura ys1",
             Width = 200
@@ -334,7 +335,7 @@ public class Form2 : Form
             PlaceholderText = "Em mm"
         };
 
-        Label lblYs2 = new Label
+        Label lblYs2 = new()
         {
             Text = "Altura ys2",
             Width = 200
@@ -346,7 +347,7 @@ public class Form2 : Form
             PlaceholderText = "Em mm"
         };
 
-        Label lblNext = new Label
+        Label lblNext = new()
         {
             Text = "Força Normal",
             Width = 200
@@ -358,7 +359,7 @@ public class Form2 : Form
             PlaceholderText = "Em KN"
         };
 
-        Label lblMext = new Label
+        Label lblMext = new()
         {
             Text = "Momento Fletor",
             Width = 200
@@ -374,6 +375,13 @@ public class Form2 : Form
         {
             Dock = DockStyle.Fill,
             Height = 200
+        };
+
+        FlowLayoutPanel divVoid = new()
+        {
+            Height = 300,
+            Width = 500
+
         };
 
         divForcas.Controls.Add(lblNext);
@@ -442,6 +450,9 @@ public class Form2 : Form
         main.Controls.Add(divClasseAcoActive);
         main.Controls.Add(divForcas);
         main.Controls.Add(divButton);
+        main.Controls.Add(divVoid);
+        main.Controls.Add(title);
+        main.Controls.Add(pb);
 
         cbClasseConcreto.SelectedIndexChanged += (e, s) =>
         {
@@ -498,21 +509,30 @@ public class Form2 : Form
 
     private void RenderGraph(PictureBox pb)
     {
-        Load += delegate
+        title = new Label
         {
-            Width = pb.Width;
-            Height = pb.Height;
-
-            Bitmap bmp = new(Width, Height);
-            using (Graphics g = Graphics.FromImage(bmp))
-            {
-                using Pen pen = new Pen(Color.Black, 2);
-                g.Clear(Color.Red);
-                g.DrawRectangle(pen, new Rectangle(0, 0, 50, 100));
-            }
-            pb.Image = bmp;
+            Text = "Tensões no Concreto",
+            Size = new Size(500, 25),
         };
-        main.Controls.Add(pb);
+        Width = pb.Width;
+        Height = pb.Height;
+
+        Bitmap bmp = new(Width, Height);
+        using Graphics g = Graphics.FromImage(bmp);
+        g.Clear(Color.White);
+
+        using Pen pen = new(Color.Gray, 1);
+        using Pen pen1 = new(Color.Red, 1);
+        PointF pointY = new(pb.Width / 2, 0);
+        PointF pointY2 = new(pb.Width / 2, pb.Height);
+
+        PointF pointStart = new((float)(pb.Width / 2 - process.SigmaTop*5), 0);
+        PointF pointEnd = new((float)(pb.Width / 2 - process.SigmaBottom*5), pb.Height);
+
+        g.DrawLine(pen, pointY, pointY2);
+        g.DrawLine(pen1, pointStart, pointEnd);
+        pb.Image = bmp;
+        pb.Refresh();
     }
 
     private void ShowResults()
@@ -523,16 +543,16 @@ public class Form2 : Form
             Width = 500,
         };
 
-        Label lblK = new Label
+        Label lblK = new()
         {
-            Text = "K = " + process.K.ToString("E2"),
-            Width = 100
+            Text = "Top = " + process.SigmaTop.ToString("F2") + " MPa",
+            Width = 150
         };
 
-        Label lblEpr = new Label
+        Label lblEpr = new()
         {
-            Text = "Epr = " + process.Epr.ToString("E2"),
-            Width = 100
+            Text = "Bottom = " + process.SigmaBottom.ToString("F2")+ " MPa",
+            Width = 150
         };
         divResults.Controls.Add(lblK);
         divResults.Controls.Add(lblEpr);
@@ -606,8 +626,8 @@ public class Form2 : Form
         {
             process = new Process(concrete, steelActive, steelPassive, bean, force);
             process.ProcessMatrix();
-            RenderGraph(pb);
             ShowResults();
+            RenderGraph(pb);
         }
         catch (Exception err)
         {
