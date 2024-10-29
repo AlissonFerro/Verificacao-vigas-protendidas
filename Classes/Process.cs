@@ -19,6 +19,9 @@ public class Process(Concrete concrete, SteelActive steelActive, SteelPassive st
 
   public double K { get; set; }
   public double Epr { get; set; }
+  public double Epinit { get; set; }
+  public double SigmaTop { get; set; }
+  public double SigmaBottom { get; set; }
   public void ProcessMatrix()
   {
     double[,] Mf0 = {
@@ -41,6 +44,16 @@ public class Process(Concrete concrete, SteelActive steelActive, SteelPassive st
 
     K = k;
     Epr = epr;
+    Epinit = epinit;
+
+    double [,] e0Top = MultiplyByScalar(e0, 1 - bean.Ytop);
+    double [,] e0Bottom = MultiplyByScalar(e0, 1- bean.Ybottom);
+
+    double [,] sigTop = MultiplyByScalar(e0Top, Concrete.Ecs);
+    double [,] sigBottom = MultiplyByScalar(e0Bottom, Concrete.Ecs);
+    
+    SigmaTop = sigTop[0,0];
+    SigmaBottom = sigBottom[0,0];
   }
 
   public static double[,] MultVectorByMatrix(double[] vector, double[,] matrix)
