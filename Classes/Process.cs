@@ -70,7 +70,7 @@ public class Process(Concrete concrete, SteelActive steelActive, SteelPassive st
     {
       for (int i = 0; i < vectorLength; i++)
       {
-        result[i, j] = vector[i] * matrix[i, j]; // Multiplicação do vetor pela coluna da matriz
+        result[i, j] = vector[i] * matrix[i, j];
       }
     }
 
