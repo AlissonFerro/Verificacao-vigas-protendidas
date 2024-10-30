@@ -5,17 +5,17 @@ public class Process(Concrete concrete, SteelActive steelActive, SteelPassive st
   readonly Concrete Concrete = concrete;
   readonly SteelActive SteelActive = steelActive;
   readonly SteelPassive SteelPassive = steelPassive;
-  Bean Bean => bean;
+  Bean Beam => bean;
   Force Force => force;
-  public readonly double AlfAs = steelPassive.Es / concrete.Ecs;
-  public double AlfAp => SteelActive.Es / Concrete.Ecs;
+  public readonly double AlfAs = steelPassive.Es / concrete.Eccff;
+  public double AlfAp => SteelActive.Es / Concrete.Eccff;
 
   public double As1e => (AlfAs - 1) * SteelPassive.As1;
   public double As2e => (AlfAs - 1) * SteelPassive.As2;
-  public double A0 => Bean.Ac + As1e + As2e - Bean.Gap;
-  public double B0 => (Bean.b * Bean.h * Bean.yc) + (As1e * SteelActive.Ys1) + (As2e * SteelActive.Ys2) - (Bean.Gap * SteelActive.Yf);
+  public double A0 => Beam.Ac + As1e + As2e - Beam.Gap;
+  public double B0 => (Beam.b * Beam.h * Beam.yc) + (As1e * SteelActive.Ys1) + (As2e * SteelActive.Ys2) - (Beam.Gap * SteelActive.Yf);
   public double I0 =>
-    Bean.Ieq + Bean.Ac * Bean.yc * Bean.Yc + As1e * SteelActive.Ys1 * SteelActive.Ys1 + As2e * SteelActive.Ys2 * SteelActive.Ys2 - Bean.Gap * SteelActive.Yf * SteelActive.Yf;
+    Beam.Ieq + Beam.Ac * Beam.yc * Beam.Yc + As1e * SteelActive.Ys1 * SteelActive.Ys1 + As2e * SteelActive.Ys2 * SteelActive.Ys2 - Beam.Gap * SteelActive.Yf * SteelActive.Yf;
 
   public double K { get; set; }
   public double Epr { get; set; }
@@ -28,16 +28,15 @@ public class Process(Concrete concrete, SteelActive steelActive, SteelPassive st
       {I0, B0},
       {B0, A0}
     };
+    double scalar = 1 / (Concrete.Eccff * (A0 * I0 - Math.Pow(B0, 2)));
 
-    double scalar = 1 / (Concrete.Ecs * this.A0 * this.I0 - this.B0 * this.B0);
-
-    double[,] F0 = MultiplyByScalar(Mf0, scalar);
+    double[,] Fk = MultiplyByScalar(Mf0, scalar);
     double Pi1000 = Math.PI * 1000;
 
     double[] Rext = [Force.Next * 1e3, Force.Mext * 1e6];
     double epinit = Pi1000 / (SteelActive.Astot * SteelActive.Es);
     double[] fpinit = [Pi1000, -1 * SteelActive.Yp];
-    double[,] e0 = MultVectorByMatrix(SubVectores(Rext, fpinit), F0);
+    double[,] e0 = MultVectorByMatrix(SubVectores(Rext, fpinit), Fk);
 
     double epr = e0[0, 0];
     double k = e0[1, 0];
@@ -54,6 +53,13 @@ public class Process(Concrete concrete, SteelActive steelActive, SteelPassive st
     
     SigmaTop = sigTop[0,0];
     SigmaBottom = sigBottom[0,0];
+
+    // double [] fcrk = [Beam.Ac * Concrete.Ecm0 - B0 * Beam.K0, B0 * Concrete.Ecm0 + Beam.Ieq * Beam.K0];
+
+    // double fcr = Fc0 * Ec0 * ;
+
+    // double ek = Fk*(Rext - fcr + fcsk - fpinit + fprelk + fcpinit);
+
   }
 
   public static double[,] MultVectorByMatrix(double[] vector, double[,] matrix)

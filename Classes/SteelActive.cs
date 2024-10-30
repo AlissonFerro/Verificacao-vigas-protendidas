@@ -11,9 +11,9 @@ public class SteelActive(
     public override double Astot => As1;
     public override SteelType Type => SteelType.Active;
 
-    public override int Fyk => fyk;
+    public override int Fyk => fyk * 10;
 
-    public override int Es => 200000;
+    public override int Es => 200;
     public double Pi => pi;    
     public double Ys1 => ys1;
     public double Ys2 => ys2;

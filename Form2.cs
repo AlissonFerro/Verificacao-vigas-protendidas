@@ -22,6 +22,8 @@ public class Form2 : Form
     private TextBox inptAsActive;
     private TextBox inptNext;
     private TextBox inptMext;
+    private TextBox inptK0;
+    private TextBox inptEr0;
     private PictureBox pb;
     private FlowLayoutPanel main;
     private FlowLayoutPanel divResults;
@@ -126,7 +128,7 @@ public class Form2 : Form
         var divPropriedadesViga = new FlowLayoutPanel
         {
             Width = 500,
-            Height = 200,
+            Height = 300,
             FlowDirection = FlowDirection.LeftToRight
         };
 
@@ -384,6 +386,30 @@ public class Form2 : Form
 
         };
 
+        Label lblK0 = new Label
+        {
+            Text = "K t0",
+            Width = 100
+        };
+
+        inptK0 = new TextBox
+        {
+            Width = 100,
+
+        };
+
+        Label lblEr0 = new Label
+        {
+            Text = "E t0",
+            Width = 100
+        };
+
+        inptEr0 = new TextBox 
+        {
+            Width = 100,
+            PlaceholderText = "Em mm"
+        };
+
         divForcas.Controls.Add(lblNext);
         divForcas.Controls.Add(inptNext);
 
@@ -409,6 +435,12 @@ public class Form2 : Form
 
         divPropriedadesViga.Controls.Add(lblAsPassivo2);
         divPropriedadesViga.Controls.Add(txbAsPassivo2);
+
+        divPropriedadesViga.Controls.Add(lblK0);
+        divPropriedadesViga.Controls.Add(inptK0);
+
+        divPropriedadesViga.Controls.Add(lblEr0);
+        divPropriedadesViga.Controls.Add(inptEr0);
 
         divClasseAcoActive.Controls.Add(lblClasseAcoActive);
         divClasseAcoActive.Controls.Add(cbClasseAcoActive);
@@ -526,8 +558,8 @@ public class Form2 : Form
         PointF pointY = new(pb.Width / 2, 0);
         PointF pointY2 = new(pb.Width / 2, pb.Height);
 
-        PointF pointStart = new((float)(pb.Width / 2 - process.SigmaTop*5), 0);
-        PointF pointEnd = new((float)(pb.Width / 2 - process.SigmaBottom*5), pb.Height);
+        PointF pointStart = new((float)(pb.Width / 2 - process.SigmaTop * 5), 0);
+        PointF pointEnd = new((float)(pb.Width / 2 - process.SigmaBottom * 5), pb.Height);
 
         g.DrawLine(pen, pointY, pointY2);
         g.DrawLine(pen1, pointStart, pointEnd);
@@ -551,7 +583,7 @@ public class Form2 : Form
 
         Label lblEpr = new()
         {
-            Text = "Bottom = " + process.SigmaBottom.ToString("F2")+ " MPa",
+            Text = "Bottom = " + process.SigmaBottom.ToString("F2") + " MPa",
             Width = 150
         };
         divResults.Controls.Add(lblK);
@@ -565,13 +597,14 @@ public class Form2 : Form
         int BBean = int.Parse(inptBBean.Text.ToString());
         int YcBean = int.Parse(inptYcBean.Text.ToString());
         double GapBean = double.Parse(inptGapBean.Text.ToString());
-
-        this.bean = new Bean(BBean, HBean, YcBean, GapBean);
+        double K0 = double.Parse(inptK0.Text.ToString()) * 1e6;
+        double er0 = double.Parse(inptEr0.Text.ToString()) * 1e6;
+        this.bean = new Bean(BBean, HBean, YcBean, GapBean, K0, er0);
     }
 
     private void StartSteelPassive()
     {
-        int fyk = int.Parse(SteelSelected.ToString()!) * 10;
+        int fyk = int.Parse(SteelSelected.ToString()!);
         int As1 = int.Parse(txbAsPassivo.Text.ToString());
         int As2 = int.Parse(txbAsPassivo2.Text.ToString());
         this.steelPassive = new SteelPassive(fyk, As1, As2);
@@ -587,7 +620,7 @@ public class Form2 : Form
     {
         string fykString = cbClasseAcoActive.Text.ToString();
         string[] fykSplit = fykString.Split(" ");
-        int fyk = int.Parse(fykSplit[1]) * 10;
+        int fyk = int.Parse(fykSplit[1]);
         int As = int.Parse(inptAsActive.Text.ToString());
         int Yf = int.Parse(inptYf.Text.ToString());
         int ys1 = int.Parse(inptYs1.Text.ToString());
@@ -618,8 +651,8 @@ public class Form2 : Form
         }
         catch (Exception err)
         {
-            MessageBox.Show("Falha ao iniciar, verifique os dados inseridos");
-            // MessageBox.Show(err.Message.ToString());
+            // MessageBox.Show("Falha ao iniciar, verifique os dados inseridos");
+            MessageBox.Show(err.Message.ToString());
             return;
         }
         try
