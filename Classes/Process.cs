@@ -1,12 +1,12 @@
-public class Process(Concrete concrete, SteelActive steelActive, SteelPassive steelPassive, Bean beam, Force force)
+public class Process(Concrete concrete, SteelActive steelActive, SteelPassive steelPassive, Beam beam, Force force)
 {
   readonly Concrete Concrete = concrete;
   readonly SteelActive SteelActive = steelActive;
   readonly SteelPassive SteelPassive = steelPassive;
-  Bean Beam => beam;
+  Beam Beam => beam;
   Force Force => force;
-  public readonly double AlfEs = steelPassive.Es / concrete.Eccff;
-  public double AlfEp => SteelActive.Es / Concrete.Eccff;
+  public readonly double AlfEs = steelPassive.Es / (concrete.Eccff / 1000);
+  public double AlfEp => SteelActive.Es / (Concrete.Eccff / 1000);
 
   public double As1e => (AlfEs - 1) * SteelPassive.As1;
   public double As2e => (AlfEs - 1) * SteelPassive.As2;
@@ -29,7 +29,10 @@ public class Process(Concrete concrete, SteelActive steelActive, SteelPassive st
     double FkScalar = 1 / (Concrete.Eccff * (Ak * Ik - Math.Pow(Bk, 2)));
 
     double[,] Fk = MultiplyByScalar(Mf0, FkScalar);
-    double[] Rext = [Force.Next * 1e3, Force.Mext * 1e6];
+    double[] Rext = [Force.Next, Force.Mext];
+
+    MessageBox.Show(AlfEs.ToString(), "Alfa Es");
+    MessageBox.Show(AlfEp.ToString(), "Alfa Ep");
 
     // Efeito da fluência
     double Ac = Beam.Ac - SteelPassive.Astot - SteelActive.Astot;
@@ -52,18 +55,23 @@ public class Process(Concrete concrete, SteelActive steelActive, SteelPassive st
 
     double[] fcp = [0,0];
 
-    double[,] Ek = MultVectorByMatrix(SomaVectores(SomaVectores(SubVectores(SomaVectores(SubVectores(Rext, fcrk), fcsk), Fpinit), Fprel),fcp), Fk);
+    double[,] Ek = MultVectorByMatrix(SomaVectores(SomaVectores(SubVectores(SomaVectores(SubVectores(Rext, Fcrkc), fcsk), Fpinit), Fprel),fcp), Fk);
 
     double[] E0 = [Beam.Er0, Beam.K0];
 
     double defEkTop = Ek[0,0]  - Beam.Ytop * Ek[1,1];
     double defEkBottom = Ek[0,0]  - Beam.Ybottom * Ek[1,1];
 
-    SigmaTop = Concrete.Eccff * (defEkTop - Concrete.Ecs) + Fc0;
-    SigmaBottom = Concrete.Eccff * (defEkBottom - Concrete.Ecs) + Fc0;
+    MessageBox.Show(defEkTop.ToString(), "Def top");
+    MessageBox.Show(defEkBottom.ToString(), "Def base");
+    
+    double SigmaBottom0 = -9.55;
+    double SigmaTop0 = -0.822;
 
-    MessageBox.Show(Concrete.Eccff.ToString());
+    double epsonEcs = -600 * 1e-6;
 
+    SigmaTop = Concrete.Eccff * (defEkTop - epsonEcs) + Fc0 * SigmaTop0;
+    SigmaBottom = Concrete.Eccff * (defEkBottom - epsonEcs) + Fc0 * SigmaBottom0;
 
     // double EkTop = Erk
 

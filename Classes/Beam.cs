@@ -1,4 +1,4 @@
-public record Bean(int b, int h, int yc, double gap, double k0, double er0)
+public record Beam(int b, int h, int yc, double gap, double k0, double er0)
 {
     public readonly int Ac = b*h; 
     public readonly double K0 = k0; 

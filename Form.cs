@@ -6,12 +6,12 @@ public class Form2 : Form
     public SteelPassive steelPassive;
     public SteelActive steelActive;
     public Force force;
-    public Bean bean;
+    public Beam beam;
     public Process process;
-    private TextBox inptHBean;
-    private TextBox inptBBean;
-    private TextBox inptYcBean;
-    private TextBox inptGapBean;
+    private TextBox inptHBeam;
+    private TextBox inptBBeam;
+    private TextBox inptYcBeam;
+    private TextBox inptGapBeam;
     private TextBox txbAsPassivo;
     private TextBox txbAsPassivo2;
     private TextBox inptYf;
@@ -150,13 +150,13 @@ public class Form2 : Form
             Width = 100
         };
 
-        this.inptBBean = new TextBox
+        this.inptBBeam = new TextBox
         {
             Width = 100,
             PlaceholderText = "Em mm"
         };
 
-        this.inptBBean.KeyPress += (s, e) =>
+        this.inptBBeam.KeyPress += (s, e) =>
         {
             if (!char.IsControl(e.KeyChar) && !char.IsDigit(e.KeyChar))
             {
@@ -164,14 +164,14 @@ public class Form2 : Form
             }
         };
 
-        this.inptHBean = new TextBox
+        this.inptHBeam = new TextBox
         {
             Width = 100,
             PlaceholderText = "Em mm"
         };
 
 
-        this.inptHBean.KeyPress += (s, e) =>
+        this.inptHBeam.KeyPress += (s, e) =>
         {
             if (!char.IsControl(e.KeyChar) && !char.IsDigit(e.KeyChar))
             {
@@ -222,7 +222,7 @@ public class Form2 : Form
             Text = "yc da viga"
         };
 
-        inptYcBean = new TextBox
+        inptYcBeam = new TextBox
         {
             Width = 100,
             PlaceholderText = "Em mm"
@@ -234,7 +234,7 @@ public class Form2 : Form
         };
 
 
-        inptYcBean.KeyPress += (s, e) =>
+        inptYcBeam.KeyPress += (s, e) =>
         {
             if (!char.IsControl(e.KeyChar) && !char.IsDigit(e.KeyChar) && e.KeyChar != '.' && e.KeyChar != ',')
             {
@@ -248,7 +248,7 @@ public class Form2 : Form
             Width = 100,
         };
 
-        inptGapBean = new TextBox
+        inptGapBeam = new TextBox
         {
             Width = 100,
             PlaceholderText = "Em mm²"
@@ -256,7 +256,7 @@ public class Form2 : Form
 
         ToolTip toolTipGap = new();
         toolTipGap.SetToolTip(txtGapBean, "Caso não possua furo coloque 0");
-        toolTipGap.SetToolTip(inptGapBean, "Caso não possua furo coloque 0");
+        toolTipGap.SetToolTip(inptGapBeam, "Caso não possua furo coloque 0");
 
         var divDimensoesViga = new FlowLayoutPanel
         {
@@ -420,15 +420,15 @@ public class Form2 : Form
 
 
         divDimensoesViga.Controls.Add(lblBaseViga);
-        divDimensoesViga.Controls.Add(inptBBean);
+        divDimensoesViga.Controls.Add(inptBBeam);
 
         divDimensoesViga.Controls.Add(lblAlturaViga);
-        divDimensoesViga.Controls.Add(inptHBean);
+        divDimensoesViga.Controls.Add(inptHBeam);
 
         divDimensoesViga.Controls.Add(pb);
 
         divDimensoesViga.Controls.Add(txtGapBean);
-        divDimensoesViga.Controls.Add(inptGapBean);
+        divDimensoesViga.Controls.Add(inptGapBeam);
 
         divPropriedadesViga.Controls.Add(lblAsPassivo);
         divPropriedadesViga.Controls.Add(txbAsPassivo);
@@ -463,13 +463,13 @@ public class Form2 : Form
         divPropriedadesViga.Controls.Add(divDimensoesViga);
 
         divPropriedadesViga.Controls.Add(lblYc);
-        divPropriedadesViga.Controls.Add(inptYcBean);
+        divPropriedadesViga.Controls.Add(inptYcBeam);
 
         divPropriedadesViga.Controls.Add(txtYfBean);
         divPropriedadesViga.Controls.Add(inptYf);
 
         divPropriedadesViga.Controls.Add(txtGapBean);
-        divPropriedadesViga.Controls.Add(inptGapBean);
+        divPropriedadesViga.Controls.Add(inptGapBeam);
 
         divClasseConcreto.Controls.Add(lbClasseConcreto);
         divClasseConcreto.Controls.Add(cbClasseConcreto);
@@ -569,7 +569,7 @@ public class Form2 : Form
 
     private void ShowResults()
     {
-        this.divResults = new FlowLayoutPanel
+        divResults = new FlowLayoutPanel
         {
             FlowDirection = FlowDirection.LeftToRight,
             Width = 500,
@@ -591,15 +591,15 @@ public class Form2 : Form
         main.Controls.Add(divResults);
     }
 
-    private void StartBean()
+    private void StartBeam()
     {
-        int HBean = int.Parse(inptHBean.Text.ToString());
-        int BBean = int.Parse(inptBBean.Text.ToString());
-        int YcBean = int.Parse(inptYcBean.Text.ToString());
-        double GapBean = double.Parse(inptGapBean.Text.ToString());
+        int HBeam = int.Parse(inptHBeam.Text.ToString());
+        int BBeam = int.Parse(inptBBeam.Text.ToString());
+        int YcBeam = int.Parse(inptYcBeam.Text.ToString());
+        double GapBeam = double.Parse(inptGapBeam.Text.ToString());
         double K0 = double.Parse(inptK0.Text.ToString()) * 1e-6;
         double er0 = double.Parse(inptEr0.Text.ToString()) * 1e-6;
-        this.bean = new Bean(BBean, HBean, YcBean, GapBean, K0, er0);
+        beam = new Beam(BBeam, HBeam, YcBeam, GapBeam, K0, er0);
     }
 
     private void StartSteelPassive()
@@ -607,13 +607,13 @@ public class Form2 : Form
         int fyk = int.Parse(SteelSelected.ToString()!);
         int As1 = int.Parse(txbAsPassivo.Text.ToString());
         int As2 = int.Parse(txbAsPassivo2.Text.ToString());
-        this.steelPassive = new SteelPassive(fyk, As1, As2);
+        steelPassive = new SteelPassive(fyk, As1, As2);
     }
 
     private void StartConcrete()
     {
         int fck = int.Parse(cbClasseConcreto.Text.ToString());
-        this.concrete = new Concrete(fck);
+        concrete = new Concrete(fck);
     }
 
     private void StartSteelActive()
@@ -627,13 +627,13 @@ public class Form2 : Form
         int ys2 = int.Parse(inptYs2.Text.ToString());
         int yp = int.Parse(inptYp.Text.ToString());
         int Pi = int.Parse(inptPinit.Text.ToString());
-        this.steelActive = new SteelActive(fyk, As, Pi, ys1, ys2, Yf, yp);
+        steelActive = new SteelActive(fyk, As, Pi, ys1, ys2, Yf, yp);
     }
     private void StartForces()
     {
         int N = int.Parse(inptNext.Text.ToString());
         int M = int.Parse(inptMext.Text.ToString());
-        this.force = new Force(N, M);
+        force = new Force(N, M);
     }
     private void click_buttonCalc(object sender, EventArgs e)
     {
@@ -644,7 +644,7 @@ public class Form2 : Form
         try
         {
             StartConcrete();
-            StartBean();
+            StartBeam();
             StartSteelPassive();
             StartSteelActive();
             StartForces();
@@ -657,7 +657,7 @@ public class Form2 : Form
         }
         try
         {
-            process = new Process(concrete, steelActive, steelPassive, bean, force);
+            process = new Process(concrete, steelActive, steelPassive, beam, force);
             process.ProcessMatrix();
             ShowResults();
             RenderGraph(pb);
