@@ -29,8 +29,6 @@ public class Process(Concrete concrete, SteelActive steelActive, SteelPassive st
     double FkScalar = 1 / (Concrete.Eccff * (Ak * Ik - Math.Pow(Bk, 2)));
 
     double[,] Fk = MultiplyByScalar(Mf0, FkScalar);
-    double Pi1000 = Math.PI * 1000;
-
     double[] Rext = [Force.Next * 1e3, Force.Mext * 1e6];
 
     // Efeito da fluência
@@ -48,34 +46,55 @@ public class Process(Concrete concrete, SteelActive steelActive, SteelPassive st
 
     double[] fcsk = MultiplyVectorByScalar(fcskVector, fcskScalar);
 
-    double[] Fpinit = [SteelActive.Pi, -SteelActive.Pi * SteelActive.Yp];
+    double[] Fpinit = [SteelActive.Pi, -SteelActive.Yp * SteelActive.Pi];
+
+    double[] Fprel = [SteelActive.Pi * 0.0459, -SteelActive.Yp * SteelActive.Pi];
+
+    double[] fcp = [0,0];
+
+    double[,] Ek = MultVectorByMatrix(SomaVectores(SomaVectores(SubVectores(SomaVectores(SubVectores(Rext, fcrk), fcsk), Fpinit), Fprel),fcp), Fk);
+
+    double[] E0 = [Beam.Er0, Beam.K0];
+
+    double defEkTop = Ek[0,0]  - Beam.Ytop * Ek[1,1];
+    double defEkBottom = Ek[0,0]  - Beam.Ybottom * Ek[1,1];
+
+    SigmaTop = Concrete.Eccff * (defEkTop - Concrete.Ecs) + Fc0;
+    SigmaBottom = Concrete.Eccff * (defEkBottom - Concrete.Ecs) + Fc0;
+
+    MessageBox.Show(Concrete.Eccff.ToString());
 
 
-    double epinit = Pi1000 / (SteelActive.Astot * SteelActive.Es);
-    double[] fpinit = [Pi1000, -1 * SteelActive.Yp];
-    double[,] e0 = MultVectorByMatrix(SubVectores(Rext, fpinit), Fk);
+    // double EkTop = Erk
 
-    double epr = e0[0, 0];
-    double k = e0[1, 0];
+    // double SigmaTop = Concrete.Eccff;
 
-    K = k;
-    Epr = epr;
-    Epinit = epinit;
+    // double epinit = Pi1000 / (SteelActive.Astot * SteelActive.Es);
+    // double[] fpinit = [Pi1000, -1 * SteelActive.Yp];
+    // double[,] e0 = MultVectorByMatrix(SubVectores(Rext, fpinit), Fk);
 
-    double [,] e0Top = MultiplyByScalar(e0, 1 - beam.Ytop);
-    double [,] e0Bottom = MultiplyByScalar(e0, 1- beam.Ybottom);
+    // double epr = e0[0, 0];
+    // double k = e0[1, 0];
 
-    double [,] sigTop = MultiplyByScalar(e0Top, Concrete.Ecs);
-    double [,] sigBottom = MultiplyByScalar(e0Bottom, Concrete.Ecs);
+    // K = k;
+    // Epr = epr;
+    // Epinit = epinit;
+
+    // double [,] e0Top = MultiplyByScalar(e0, 1 - beam.Ytop);
+    // double [,] e0Bottom = MultiplyByScalar(e0, 1- beam.Ybottom);
+
+    // double [,] sigTop = MultiplyByScalar(e0Top, Concrete.Ecs);
+    // double [,] sigBottom = MultiplyByScalar(e0Bottom, Concrete.Ecs);
     
-    SigmaTop = sigTop[0,0];
-    SigmaBottom = sigBottom[0,0];
+    // SigmaTop = sigTop[0,0];
+    // SigmaBottom = sigBottom[0,0];
 
     // double fcr = Fc0 * Ec0 * ;
 
     // double ek = Fk*(Rext - fcr + fcsk - fpinit + fprelk + fcpinit);
 
   }
+  
 
   public static double[] MultiplyVectorByScalar(double[] vector, double scalar)
   {
@@ -127,6 +146,23 @@ public class Process(Concrete concrete, SteelActive steelActive, SteelPassive st
       result[i] = vector1[i] - vector2[i];
     }
 
+    return result;
+  }
+
+  private static double[] SomaVectores(double[] vector1, double[] vector2)
+  {
+    int length = vector1.Length;
+    int length2 = vector2.Length;
+
+    if(length != length2)
+      throw new ArgumentException("Os vetores devem ter o mesmo tamanho");
+
+    double[] result = new double[length];
+
+    for (int i = 0; i < length; i++)
+    {
+      result[i] = vector1[i] + vector2[i];
+    }
     return result;
   }
 

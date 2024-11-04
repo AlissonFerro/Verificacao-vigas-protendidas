@@ -597,8 +597,8 @@ public class Form2 : Form
         int BBean = int.Parse(inptBBean.Text.ToString());
         int YcBean = int.Parse(inptYcBean.Text.ToString());
         double GapBean = double.Parse(inptGapBean.Text.ToString());
-        double K0 = double.Parse(inptK0.Text.ToString()) * 1e6;
-        double er0 = double.Parse(inptEr0.Text.ToString()) * 1e6;
+        double K0 = double.Parse(inptK0.Text.ToString()) * 1e-6;
+        double er0 = double.Parse(inptEr0.Text.ToString()) * 1e-6;
         this.bean = new Bean(BBean, HBean, YcBean, GapBean, K0, er0);
     }
 
