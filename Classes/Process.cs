@@ -11,28 +11,29 @@ public class Process(Concrete concrete, SteelActive steelActive, SteelPassive st
   public double As1e => (AlfEs - 1) * SteelPassive.As1;
   public double As2e => (AlfEs - 1) * SteelPassive.As2;
   public double Ak => Beam.Ac + As1e + As2e - Beam.Gap;
-  public double Bk => (Beam.Ac * Beam.yc) + (As1e * SteelActive.Ys1) + (As2e * SteelActive.Ys2) - (Beam.Gap * SteelActive.Yf);
+  public double Bk => (Beam.Ac * Beam.yc) + (As1e * SteelActive.Ys2) + (As2e * SteelActive.Ys2) - (Beam.Gap * SteelActive.Yf);
   public double Ik =>
-    Beam.Ieq + (Beam.Ac * Math.Pow(Beam.yc, 2)) + (As1e * SteelActive.Ys1 * SteelActive.Ys1) + (As2e * SteelActive.Ys2 * SteelActive.Ys2) - Beam.Gap * SteelActive.Yf * SteelActive.Yf;
+    Beam.Ieq + (Beam.Ac * Math.Pow(Beam.yc, 2)) + (As1e * Math.Pow(SteelActive.Ys1, 2)) + (As2e * Math.Pow(SteelActive.Ys2, 2)) - Beam.Gap * Math.Pow(SteelActive.Yf, 2);
 
   public double K { get; set; }
   public double Epr { get; set; }
   public double Epinit { get; set; }
   public double SigmaTop { get; set; }
   public double SigmaBottom { get; set; }
-  public void ProcessMatrix()
+  public void Execute()
   {
-    double[,] Mf0 = {
+    MessageBox.Show(Ak.ToString("E2"), "AK");
+    MessageBox.Show(Bk.ToString("E2"), "BK");
+    MessageBox.Show(Ik.ToString("E2"), "IK");
+
+    double[,] Mfk = {
       {Ik, Bk},
       {Bk, Ak}
     };
     double FkScalar = 1 / (Concrete.Eccff * (Ak * Ik - Math.Pow(Bk, 2)));
 
-    double[,] Fk = MultiplyByScalar(Mf0, FkScalar);
+    double[,] Fk = MultiplyByScalar(Mfk, FkScalar);
     double[] Rext = [Force.Next, Force.Mext];
-
-    MessageBox.Show(AlfEs.ToString(), "Alfa Es");
-    MessageBox.Show(AlfEp.ToString(), "Alfa Ep");
 
     // Efeito da fluência
     double Ac = Beam.Ac - SteelPassive.Astot - SteelActive.Astot;
@@ -54,16 +55,13 @@ public class Process(Concrete concrete, SteelActive steelActive, SteelPassive st
     double[] Fprel = [SteelActive.Pi * 0.0459, -SteelActive.Yp * SteelActive.Pi];
 
     double[] fcp = [0,0];
-
-    double[,] Ek = MultVectorByMatrix(SomaVectores(SomaVectores(SubVectores(SomaVectores(SubVectores(Rext, Fcrkc), fcsk), Fpinit), Fprel),fcp), Fk);
+    double[] ekVector = SomaVectores(SomaVectores(SubVectores(SomaVectores(SubVectores(Rext, Fcrkc), fcsk), Fpinit), Fprel),fcp);
+    double[,] Ek = MultVectorByMatrix(ekVector, Fk);
 
     double[] E0 = [Beam.Er0, Beam.K0];
 
-    double defEkTop = Ek[0,0]  - Beam.Ytop * Ek[1,1];
-    double defEkBottom = Ek[0,0]  - Beam.Ybottom * Ek[1,1];
-
-    MessageBox.Show(defEkTop.ToString(), "Def top");
-    MessageBox.Show(defEkBottom.ToString(), "Def base");
+    double defEkTop = Ek[0,0] - Beam.Ytop * Ek[1,1];
+    double defEkBottom = Ek[0,0] - Beam.Ybottom * Ek[1,1];
     
     double SigmaBottom0 = -9.55;
     double SigmaTop0 = -0.822;
@@ -119,7 +117,7 @@ public class Process(Concrete concrete, SteelActive steelActive, SteelPassive st
   public static double[,] MultVectorByMatrix(double[] vector, double[,] matrix)
   {
     int vectorLength = vector.Length;
-    int matrixCols = matrix.GetLength(1);
+    int matrixCols = matrix.GetLength(0);
 
     if (vectorLength != matrix.GetLength(0))
       throw new ArgumentException("O número de linhas da matriz deve ser igual ao comprimento do vetor.");    

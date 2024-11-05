@@ -658,13 +658,13 @@ public class Form2 : Form
         try
         {
             process = new Process(concrete, steelActive, steelPassive, beam, force);
-            process.ProcessMatrix();
+            process.Execute();
             ShowResults();
             RenderGraph(pb);
         }
         catch (Exception err)
         {
-            MessageBox.Show(err.Message.ToString());
+            MessageBox.Show(err.Message.ToString(), "Error");
             return;
         }
     }
